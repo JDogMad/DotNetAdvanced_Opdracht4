@@ -14,19 +14,18 @@ namespace TeDoen {
         // Dit tijdstip is null als er geen specifiek tijdstip is. Anders moet het groter zijn dan "DateTime.Now".
         public DateTime? tijdStip;
         // string Titel:  Bevat de korte titel / omschrijving van het TeDoen object
-        public string titel;
+        public string titel { get; set; }
         // string[] Informatie:  Bevat (indien gewenst) uitgebreidere informatie betreffende dit TeDoen object
         public string[] informatie { get; set; }
         // event meedelen 
-        public delegate void MeeDelen(string titel, string inhoud, Boolean dringend);
         Boolean dringend;
 
         public TeDoen(){}
 
         public TeDoen(string titel, string[] informatie) {
             int id = +1;
-            titel = this.titel;
-            informatie = this.informatie;
+            this.titel = titel;
+            this.informatie = informatie;
 
             if (tijdStip == DateTime.MinValue) {
                 tijdStip = null;
@@ -40,8 +39,8 @@ namespace TeDoen {
             }
             tijdStip = new DateTime();
             int id = +1;
-            titel = this.titel;
-            informatie = this.informatie;
+            this.titel = titel;
+            this.informatie = informatie;
 
             
         }
@@ -56,12 +55,12 @@ namespace TeDoen {
 
         // override ToString()
         public override string ToString() {
-            if (this.tijdStip == null) {
-                Meedelen(titel, informatie, dringend);
-                return this.titel + " " + this.informatie;
-            } else 
-                Meedelen(titel, informatie, dringend);
-                return this.titel + " " + this.informatie + " " + this.tijdStip;
+            string inf = " ";
+            foreach(string info in informatie){
+                inf += info;
+            }
+           Meedelen(titel, informatie, dringend);
+           return titel + " " + inf + " " + tijdStip;
         }
     }
 }

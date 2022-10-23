@@ -9,11 +9,20 @@ namespace TeDoen {
         FouteRij<TeDoen> Taken = new FouteRij<TeDoen>();
         // Zaken die nodig zijn voor de event
         public delegate void MeeDelen(string titel, string inhoud, Boolean dringend);
-        public event MeeDelen meedelen;
+        public MeeDelen tdelen;
+        public event MeeDelen delen = null;
         Boolean dringend;
 
         public Form1() {
             InitializeComponent();
+        }
+
+        // Bij het laden van de form is het automatisch uit 
+        // daarom zet ik het al op rood
+        private void Form1_Load(object sender, EventArgs e) {
+            btnFunc1.BackColor = Color.Red;
+            btnFunc2.BackColor = Color.Red;
+            btnFunc3.BackColor = Color.Red;
         }
 
         // als de checkbox uitgevinkt is, wordt er geen tijd-veld getoond, en zal de overeenkomstige tijd null zijn
@@ -59,16 +68,18 @@ namespace TeDoen {
         // Voorzie een event "Meedelen" dat een TeDoen object 
         // (onverschillig of het in de rij zit, of geprogrammeerd is om asynchroon uitgevoerd te worden) "Meedeelt"
         private void btnDelen_Click(object sender, EventArgs e) {
-            meedelen(txtTitel.Text, txtInformatie.Text, dringend);
-            txtOutput.Text = meedelen.ToString();
+            TeDoen td = new TeDoen(txtTitel.Text, txtInformatie.Lines);
+            txtOutput.Text = td.ToString();
         }
 
         public void Func1(string titel, string inhoud, Boolean dringend){
-            txtOutput.Text = meedelen.ToString();
+            TeDoen td = new TeDoen(txtTitel.Text, txtInformatie.Lines);
+            txtOutput.Text = td.ToString();
         }
 
         public void Func2(string titel, string inhoud, Boolean dringend){
-            var txtOutput = meedelen.ToString();
+            TeDoen td = new TeDoen(txtTitel.Text, txtInformatie.Lines);
+            var txtOutput = td.ToString();
             MessageBox.Show(txtOutput);
         }
         public void Func3(string titel, string inhoud, Boolean dringend) {
@@ -80,28 +91,36 @@ namespace TeDoen {
             // Alles "Meedelen" in een multi-line textveld op je scherm aan of uit zet(de knop is groen als dit aanstaat, 
             // rood als dit uitstaat)
             if (sender == btnFunc1) {
-                if (btnFunc1.BackColor == Color.Red)
-                    meedelen -= new MeeDelen(Func1);
-                else
+                if (btnFunc1.BackColor == Color.Red) {
+                    delen -= new MeeDelen(Func1);
                     btnFunc1.BackColor = Color.Green;
-                    meedelen += new MeeDelen(Func1);
+                } else if(btnFunc1.BackColor == Color.Green) {
+                    delen += new MeeDelen(Func1);
+                    btnFunc1.BackColor = Color.Red;
+                }
             }
             // Alles "Meedelen" in een MessageBox(ook aan/uit met rood/groen)
             if (sender == btnFunc2) {
-                if (btnFunc2.BackColor == Color.Red)
-                    meedelen -= new MeeDelen(Func2);
-                else
+                if (btnFunc2.BackColor == Color.Red) {
+                    delen -= new MeeDelen(Func2);
                     btnFunc2.BackColor = Color.Green;
-                    meedelen += new MeeDelen(Func2);
+                } else if (btnFunc2.BackColor == Color.Green) {
+                    delen += new MeeDelen(Func2);
+                    btnFunc2.BackColor = Color.Red;
+                };
             }
             // Een biep laat horen(ook aan/uit met rood/groen)
             if (sender == btnFunc3) {
-                if (btnFunc3.BackColor == Color.Red)
-                    meedelen -= new MeeDelen(Func3);
-                else
+                if (btnFunc3.BackColor == Color.Red) {
+                    delen -= new MeeDelen(Func3);
                     btnFunc3.BackColor = Color.Green;
-                    meedelen += new MeeDelen(Func3);
+                } else if (btnFunc3.BackColor == Color.Green) {
+                    delen += new MeeDelen(Func3);
+                    btnFunc3.BackColor = Color.Red;
+                }
             }
         }
+
+        
     }
 }
